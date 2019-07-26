@@ -1,0 +1,35 @@
+{
+  "name": "@directus/system-status",
+  "private": false,
+  "version": "1.0.0",
+  "description": "A simple system status page for Directus",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "build": "npm run build:site && npm run build:assets",
+    "build:site": "parcel build src/index.html --no-minify --public-url /",
+    "build:assets": "parcel build src/assets/**/*.* -d ./dist/assets"
+  },
+  "repository": "directus/system-status",
+  "author": "Ben Haynes <ben@rngr.org>",
+  "bugs": {
+    "url": "https://github.com/directus/system-status/issues"
+  },
+  "homepage": "https://github.com/directus/system-status#readme",
+  "devDependencies": {
+    "autoprefixer": "^8.6.5",
+    "node-sass": "^4.9.3",
+    "parcel-bundler": "^1.10.3"
+  },
+  "dependencies": {
+    "normalize.css": "^8.0.0"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": true
+    }
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}
