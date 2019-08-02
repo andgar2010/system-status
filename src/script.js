@@ -71,7 +71,7 @@ function getIncidentListItem(dateString, status, description) {
           'Some users are reporting latency with the Directus Cloud API'
         }
       </h4>
-      <h5>${description || 'We\'re investigating'}</h5>
+      <h5>${description}</h5>
     </div>
   </li>`
 }
