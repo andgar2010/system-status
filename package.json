@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "parcel src/index.html",
     "build": "npm run build:site && npm run build:assets",
+    "fix": "prettier --print-width 120 --write 'src/**/*.{js,html,scss}'",
     "build:site": "parcel build src/index.html --no-minify --public-url /",
     "build:assets": "parcel build src/assets/**/*.* -d ./dist/assets"
   },
@@ -29,7 +30,11 @@
       "autoprefixer": true
     }
   },
+  "license": "",
   "browserslist": [
-    "defaults"
+    "last 2 Chrome versions",
+    "last 2 Safari versions",
+    "last 2 Firefox versions",
+    "last 2 Edge versions"
   ]
 }
