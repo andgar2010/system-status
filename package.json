@@ -6,10 +6,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel src/index.html",
-    "build": "npm run build:site && npm run build:assets",
+    "build": "npm run build:site",
     "fix": "prettier --print-width 120 --write 'src/**/*.{js,html,scss}'",
-    "build:site": "parcel build src/index.html --no-minify --public-url /",
-    "build:assets": "parcel build src/assets/**/*.* -d ./dist/assets"
+    "build:site": "parcel build src/index.html --no-minify --public-url /"
   },
   "repository": "directus/system-status",
   "author": "Ben Haynes <ben@rngr.org>",
