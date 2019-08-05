@@ -74,7 +74,8 @@ async function init() {
 init();
 
 function getIncidentListItem(dateString, reportsInThisDay = []) {
-  const dateTimeFormat = new Intl.DateTimeFormat('default', { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+  const timeFormat = new Intl.DateTimeFormat('default', { hour: 'numeric', minute: 'numeric', 'hour12': false });
+  const dateTimeFormat = new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', hour: 'numeric', minute: 'numeric', 'hour12': false });
   reportsInThisDay = reportsInThisDay.filter(({ status }) => status !== 'green');
 
   if (reportsInThisDay.length === 0) {
@@ -99,8 +100,8 @@ function getIncidentListItem(dateString, reportsInThisDay = []) {
                 'Latency reported for the Directus Cloud API'
               }
             </h4>
-            <h5>${description || ''}</h5>
-            <p>${dateTimeFormat.format(new Date(datetime))} ${datetime_end ? ' — ' + dateTimeFormat.format(new Date(datetime_end)) : ''}</p>
+            <h5>${description || '<b>Resolved</b> — This incident has been resolved.'}</h5>
+            <p>${dateTimeFormat.format(new Date(datetime))} ${datetime_end ? ' — ' + timeFormat.format(new Date(datetime_end)) : ''} UTC</p>
           </li>
           `,
         '')
