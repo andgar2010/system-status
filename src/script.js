@@ -1,5 +1,5 @@
 async function init() {
-  const { format, render, cancel, register } = require('timeago.js');
+  const { format } = require('timeago.js');
 
   const response = await fetch('https://cloud-api.directus.cloud/system/status/past');
   const { data } = await response.json();
@@ -8,18 +8,19 @@ async function init() {
   const uptimeData = await uptimeResponse.json();
   const uptime = uptimeData.data.toFixed(2) + " % Uptime";
 
-  const lastStatus = data[0].status;
-  const lastUpdated = format(new Date(data[0].datetime), 'en_US');
+  const lastResponse = await fetch('https://cloud-api.directus.cloud/system/status/last');
+  const lastData = await lastResponse.json();
 
-  console.log(data, uptimeData.data);
+  const lastStatus = lastData.data.status;
+  const lastUpdated = format(new Date(lastData.data.datetime), 'en_US');
 
   document.querySelector('#current').classList.add(lastStatus + '-bg');
   document.querySelector('#cloud-api-status').classList.add(lastStatus);
   document.querySelector('#cloud-asset-status').classList.add(lastStatus);
   document.querySelector('#date').innerText = 'Last updated: ' + lastUpdated;
 
-  let allCopy = "Unknown";
-  let cloudCopy = "Unknown";
+  let allCopy = 'Unknown';
+  let cloudCopy = 'Unknown';
 
   switch(lastStatus) {
     case 'red':
