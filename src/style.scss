@@ -25,6 +25,7 @@ $body-background: #f6f7f8;
 $blue: #2196f3;
 $green: #4caf50;
 $yellow: #ffc107;
+$orange: #FF9800;
 $red: #f44336;
 
 $blue-light: #bbdefb;
@@ -32,6 +33,7 @@ $blue-light: #bbdefb;
 $blue-dark: #1565c0;
 $green-dark: #2e7d32;
 $yellow-dark: #ff8f00;
+$orange-dark: #EF6C00;
 $red-dark: #c62828;
 
 $breakpoint-small: 600px;
@@ -71,6 +73,10 @@ $breakpoint-extra-large: 1200px;
   color: $yellow;
 }
 
+.orange {
+  color: $orange;
+}
+
 .red {
   color: $red;
 }
@@ -85,6 +91,10 @@ $breakpoint-extra-large: 1200px;
 
 .yellow-bg {
   background-color: $yellow;
+}
+
+.orange-bg {
+  background-color: $orange;
 }
 
 .red-bg {
@@ -186,7 +196,7 @@ h4 {
 .global-status {
   display: flex;
   justify-content: space-between;
-  padding: 40px;
+  padding: 28px;
   border-radius: $border-radius;
   color: $white;
   margin-top: 40px;
@@ -204,7 +214,7 @@ h4 {
   li {
     display: flex;
     justify-content: space-between;
-    padding: 40px;
+    padding: 28px;
     border: 2px solid $lighter-gray;
     border-radius: $border-radius;
     margin-top: -2px;
@@ -214,7 +224,7 @@ h4 {
 
 .status-history {
   margin-top: 60px;
-  padding: 40px;
+  padding: 28px;
   border: 2px solid $lighter-gray;
   border-radius: $border-radius;
   background-color: $white;
@@ -228,20 +238,21 @@ h4 {
     display: flex;
     justify-content: space-between;
     align-items: stretch;
+    flex-direction: row-reverse;
     list-style: none;
-    height: 28px;
+    height: 12px;
     padding: 0;
     margin-top: 20px;
 
     li {
       transition: $medium $transition all;
       border-radius: $border-radius;
-      width: calc((100% - 178px) / 90);
+      width: calc((100% - 178px) / 30);
       cursor: pointer;
-      height: 28px;
+      height: 12px;
 
       &:hover {
-        height: 34px;
+        height: 18px;
         margin-top: -3px;
       }
     }

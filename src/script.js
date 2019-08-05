@@ -1,42 +1,51 @@
 async function init() {
+  const { format, render, cancel, register } = require('timeago.js');
+
   const response = await fetch('https://cloud-api.directus.cloud/system/status/past');
   const { data } = await response.json();
 
   const uptimeResponse = await fetch('https://cloud-api.directus.cloud/system/uptime');
   const uptimeData = await uptimeResponse.json();
-  const uptime = uptimeData.data + "%";
+  const uptime = uptimeData.data.toFixed(2) + " % Uptime";
 
   const lastStatus = data[0].status;
+  const lastUpdated = format(new Date(data[0].datetime), 'en_US');
 
-  const now = new Date();
-
-  const dateString = new Intl.DateTimeFormat('default', { year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric' }).format(now);
+  console.log(data, uptimeData.data);
 
   document.querySelector('#current').classList.add(lastStatus + '-bg');
-  document.querySelector('#date').innerText = 'Last updated: ' + dateString;
+  document.querySelector('#cloud-api-status').classList.add(lastStatus);
+  document.querySelector('#cloud-asset-status').classList.add(lastStatus);
+  document.querySelector('#date').innerText = 'Last updated: ' + lastUpdated;
 
-  let copy = "Unknown";
+  let allCopy = "Unknown";
+  let cloudCopy = "Unknown";
 
   switch(lastStatus) {
     case 'red':
-      copy = 'System Outage';
+      allCopy = 'System Outage';
+      cloudCopy = 'Outage';
       break;
     case 'yellow':
-      copy = 'Degraded Performance';
+      allCopy = 'Degraded Performance';
+      cloudCopy = 'Degraded Performance';
       break;
     case 'green':
-      copy = 'Operational';
+      allCopy = 'All Systems Operational';
+      cloudCopy = 'Operational';
       break;
   }
 
-  document.querySelector('#current-status').innerText = copy;
+  document.querySelector('#current-status').innerText = allCopy;
+  document.querySelector('#cloud-api-status').innerText = cloudCopy;
+  document.querySelector('#cloud-asset-status').innerText = cloudCopy;
 
   document.body.classList.remove('loading');
 
   let incidentsHTML = '';
   let graphHTML = '';
 
-  for (let i = 0; i < 90; i++) {
+  for (let i = 0; i < 30; i++) {
     const date = new Date();
     date.setDate(date.getDate() - i);
     const dateString = new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
@@ -57,7 +66,7 @@ function getIncidentListItem(dateString, status, description) {
     return `
       <li>
         <h3>${dateString}</h3>
-        <p>No incidents reported.</p>
+        <p>No incidents reported</p>
       </li>
     `;
   }
@@ -67,11 +76,12 @@ function getIncidentListItem(dateString, status, description) {
     <div>
       <h4 class="${status}">
         ${status === 'red' ?
-          'Some users are reporting problems with the Directus Cloud API' :
-          'Some users are reporting latency with the Directus Cloud API'
+          'Issues reported for the Directus Cloud API' :
+          'Latency reported for the Directus Cloud API'
         }
       </h4>
       <h5>${description || ''}</h5>
+      <!--<p>19:30:00 — 19:41:00 UTC</p>-->
     </div>
   </li>`
 }
