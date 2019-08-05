@@ -1,5 +1,6 @@
 async function init() {
   const { format } = require('timeago.js');
+  const dateTimeFormat = new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' });
 
   const response = await fetch('https://cloud-api.directus.cloud/system/status/past');
   const { data } = await response.json();
@@ -49,11 +50,20 @@ async function init() {
   for (let i = 0; i < 30; i++) {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    const dateString = new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
+    const dateString = dateTimeFormat.format(date);
     const reportsInThisDay = data.filter(s => isInDate(new Date(s.datetime), date));
 
     incidentsHTML += getIncidentListItem(dateString, reportsInThisDay);
-    // graphHTML += `<li class="${statusReport.status || 'green'}-bg" title="${dateString}"></li>`;
+
+    let color = 'green';
+    for (let i = 0; i < reportsInThisDay.length; i++) {
+      const report = reportsInThisDay[i];
+      if (report.status !== color && report.status !== 'green') color = report.status;
+
+      // Stop looking for events, cause red is the worst that can happen
+      if (color === 'red') break;
+    }
+    graphHTML += `<li class="${color}-bg" title="${dateString}"></li>`;
   }
 
   document.querySelector('#past-incidents').innerHTML = incidentsHTML;
@@ -64,6 +74,9 @@ async function init() {
 init();
 
 function getIncidentListItem(dateString, reportsInThisDay = []) {
+  const dateTimeFormat = new Intl.DateTimeFormat('default', { hour: 'numeric', minute: 'numeric', second: 'numeric' });
+  reportsInThisDay = reportsInThisDay.filter(({ status }) => status !== 'green');
+
   if (reportsInThisDay.length === 0) {
     return `
       <li>
@@ -78,8 +91,7 @@ function getIncidentListItem(dateString, reportsInThisDay = []) {
     <ul>
       ${
         reportsInThisDay
-        .filter(({ status }) => status !== 'green')
-        .reduce((acc, { status, description }) => acc += `
+        .reduce((acc, { status, description, datetime, datetime_end }, index) => acc += `
           <li>
             <h4 class="${status}">
               ${status === 'red' ?
@@ -88,7 +100,7 @@ function getIncidentListItem(dateString, reportsInThisDay = []) {
               }
             </h4>
             <h5>${description || ''}</h5>
-            <!--<p>19:30:00 — 19:41:00 UTC</p>-->
+            <p>${dateTimeFormat.format(new Date(datetime))} ${datetime_end ? ' — ' + dateTimeFormat.format(new Date(datetime_end)) : ''}</p>
           </li>
           `,
         '')
