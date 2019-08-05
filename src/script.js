@@ -50,9 +50,10 @@ async function init() {
     const date = new Date();
     date.setDate(date.getDate() - i);
     const dateString = new Intl.DateTimeFormat('default', { day: 'numeric', month: 'short', year: 'numeric' }).format(date);
-    const statusReport = data.find(s => isInDate(new Date(s.datetime), date)) || {};
-    incidentsHTML += getIncidentListItem(dateString, statusReport.status, statusReport.description);
-    graphHTML += `<li class="${statusReport.status || 'green'}-bg" title="${dateString}"></li>`;
+    const reportsInThisDay = data.filter(s => isInDate(new Date(s.datetime), date));
+
+    incidentsHTML += getIncidentListItem(dateString, reportsInThisDay);
+    // graphHTML += `<li class="${statusReport.status || 'green'}-bg" title="${dateString}"></li>`;
   }
 
   document.querySelector('#past-incidents').innerHTML = incidentsHTML;
@@ -62,8 +63,8 @@ async function init() {
 
 init();
 
-function getIncidentListItem(dateString, status, description) {
-  if (!status || status === 'green') {
+function getIncidentListItem(dateString, reportsInThisDay = []) {
+  if (reportsInThisDay.length === 0) {
     return `
       <li>
         <h3>${dateString}</h3>
@@ -74,16 +75,25 @@ function getIncidentListItem(dateString, status, description) {
 
   return `<li>
     <h3>${dateString}</h3>
-    <div>
-      <h4 class="${status}">
-        ${status === 'red' ?
-          'Issues reported for the Directus Cloud API' :
-          'Latency reported for the Directus Cloud API'
-        }
-      </h4>
-      <h5>${description || ''}</h5>
-      <!--<p>19:30:00 — 19:41:00 UTC</p>-->
-    </div>
+    <ul>
+      ${
+        reportsInThisDay
+        .filter(({ status }) => status !== 'green')
+        .reduce((acc, { status, description }) => acc += `
+          <li>
+            <h4 class="${status}">
+              ${status === 'red' ?
+                'Issues reported for the Directus Cloud API' :
+                'Latency reported for the Directus Cloud API'
+              }
+            </h4>
+            <h5>${description || ''}</h5>
+            <!--<p>19:30:00 — 19:41:00 UTC</p>-->
+          </li>
+          `,
+        '')
+      }
+    </ul>
   </li>`
 }
 
