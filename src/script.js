@@ -63,7 +63,7 @@ async function init() {
       // Stop looking for events, cause red is the worst that can happen
       if (color === 'red') break;
     }
-    graphHTML += `<li class="${color}-bg" title="${dateString}"></li>`;
+    graphHTML += `<li class="${color}-bg" title="${dateString}"><a href="#${dateString}"></a></li>`;
   }
 
   document.querySelector('#past-incidents').innerHTML = incidentsHTML;
@@ -81,14 +81,14 @@ function getIncidentListItem(dateString, reportsInThisDay = []) {
   if (reportsInThisDay.length === 0) {
     return `
       <li>
-        <h3>${dateString}</h3>
+        <h3><a name="${dateString}">${dateString}</a></h3>
         <p>No incidents reported</p>
       </li>
     `;
   }
 
   return `<li>
-    <h3>${dateString}</h3>
+    <h3><a name="${dateString}">${dateString}</a></h3>
     <ul>
       ${
         reportsInThisDay
